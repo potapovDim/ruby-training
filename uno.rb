@@ -47,3 +47,39 @@ class UnoServer
     cards
   end
 end
+
+uno = UnoServer.new
+
+set :port, 8087
+set :environment, :production
+
+post '/' do
+  return_message = {}
+  @jdata
+  if params.is_a?(Hash) 
+    @jdata = params
+    if @jdata.has_key?('name') && uno.join_game(@jdata['name'])
+      return_message[:status] = 'welcome'
+    else
+      return_message[:status] = 'sorry - game not accepting new player'  
+    end
+  else 
+    @jdata = JSON.parse(params[:data], :symbolize_names => true)
+    if @jdata.has_key?(:name) && uno.join_game(@jdata[:name])
+      return_message[:status] = 'welcome'
+    else
+      return_message[:status] = 'sorry - game not accepting new player'  
+    end
+  end
+  return_message.to_json
+end
+
+post '/deal' do
+  return_message = {}
+  if uno.deal
+    return_message[:status] = 'success'
+  else 
+    return_message[:status] = 'fail'  
+  end
+  return_message.to_json
+end
