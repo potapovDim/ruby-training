@@ -31,7 +31,7 @@ class UnoServer
 
   def deal 
     return false unless @hands.size > 0
-    @pool = @deck.suffle
+    @pool = @deck.shuffle
     @hands.each {|player| player[:cards] = @pool.pop(5)}
     true
   end
@@ -53,7 +53,7 @@ uno = UnoServer.new
 set :port, 8087
 set :environment, :production
 
-post '/' do
+post '/join' do
   return_message = {}
   @jdata
   if params.is_a?(Hash) 
@@ -69,6 +69,21 @@ post '/' do
       return_message[:status] = 'welcome'
     else
       return_message[:status] = 'sorry - game not accepting new player'  
+    end
+  end
+  return_message.to_json
+end
+
+get '/cards' do
+  return_message = {}
+  if params.has_key?('name')
+    cards = uno.get_card(params['name'])
+    if cards.class == Array
+      return_message[:status] = 'success'
+      return_message[:cards] = cards
+    else
+      return_message[:status] = 'sorry - it appears you are not part of the game'
+      return_message[:cards] = []
     end
   end
   return_message.to_json
