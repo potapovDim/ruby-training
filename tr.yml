@@ -1,0 +1,13 @@
+LANDING:
+  scenario: landing
+
+test_cases: 
+- 
+  "rspec-browserstack": 
+    - 
+      1:'1'
+
+browser_caps:
+  -
+    "browser":
+      "chrome"
