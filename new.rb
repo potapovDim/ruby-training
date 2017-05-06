@@ -1,2 +1,1 @@
-lori = {name:  "test"}
-puts lori.has_key?()
+puts 'test'.include? 't'
